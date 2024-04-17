@@ -113,5 +113,3 @@ function updateScore(reset = false) {
       return;
     }
     score += 1;
-    scoreText.innerHTML = score;
-}
