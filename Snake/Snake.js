@@ -22,6 +22,8 @@ var gameOver = false;
 
 var score = 0;
 
+const scoreText = document.getElementById("score");
+console.log(scoreText);
 //board
 window.onload = function() {
     board = document.getElementById('board');
@@ -31,6 +33,12 @@ window.onload = function() {
 
     targetGen();
     document.addEventListener("keyup", changeDirection);
+
+    const highScore = localStorage.getItem('snakeHighScore');
+    if (highScore !== null) {
+        const highScoreText = document.getElementById("snakeHighScore");
+        highScoreText.innerHTML = highScore;
+    }
     // update();
     setInterval(update, 1000/10); //runs update function every 100 milliseconds
 }
@@ -100,6 +108,11 @@ function changeDirection(e) {
         velocityX = 1;
         velocityY = 0;
     }
+    else if (e.code == "Space") {
+        if (gameOver) {
+            restartGame();
+        }
+    }
 }
 
 function targetGen(){
@@ -113,3 +126,27 @@ function updateScore(reset = false) {
       return;
     }
     score += 1;
+    scoreText.innerHTML = score;
+    updateHighScore(score);
+}
+
+function updateHighScore(score) {
+    let highScore = localStorage.getItem('snakeHighScore');
+    if (highScore === null || score > highScore) {
+        highScore = score;
+        localStorage.setItem('snakeHighScore', highScore);
+    }
+    const highScoreText = document.getElementById("snakeHighScore");
+    highScoreText.innerHTML = highScore;
+}
+
+function restartGame() {
+    gameOver = false;
+    snakeX = blockSize * 5;
+    snakeY = blockSize * 5;
+    velocityX = 0;
+    velocityY = 0;
+    snakeBody = [];
+    score = 0;
+    updateScore(true);
+}
